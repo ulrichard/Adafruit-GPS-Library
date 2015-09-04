@@ -15,19 +15,6 @@ All text above must be included in any redistribution
 #endif
 #include <Adafruit_GPS.h>
 
-// how long are max NMEA lines to parse?
-#define MAXLINELENGTH 120
-
-// we double buffer: read one line in and leave one for the main program
-volatile char line1[MAXLINELENGTH];
-volatile char line2[MAXLINELENGTH];
-// our index into filling the current line
-volatile uint8_t lineidx=0;
-// pointers to the double buffers
-volatile char *currentline;
-volatile char *lastline;
-volatile boolean recvdflag;
-volatile boolean inStandbyMode;
 
 
 boolean Adafruit_GPS::parse(char *nmea) {
@@ -304,8 +291,8 @@ char Adafruit_GPS::read(void) {
   }
 
   currentline[lineidx++] = c;
-  if (lineidx >= MAXLINELENGTH)
-    lineidx = MAXLINELENGTH-1;
+  if (lineidx >= MAXNMEALINELENGTH)
+    lineidx = MAXNMEALINELENGTH-1;
 
   return c;
 }

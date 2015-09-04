@@ -86,6 +86,9 @@ All text above must be included in any redistribution
 // how long to wait when we're looking for a response
 #define MAXWAITSENTENCE 5
 
+// how long are max NMEA lines to parse?
+#define MAXNMEALINELENGTH 120
+
 #if ARDUINO >= 100
  #include "Arduino.h"
 #if defined (__AVR__) && !defined(__AVR_ATmega32U4__)
@@ -162,6 +165,18 @@ class Adafruit_GPS {
   #endif
 #endif
   HardwareSerial *gpsHwSerial;
+
+    // we double buffer: read one line in and leave one for the main program
+    volatile char line1[MAXNMEALINELENGTH];
+    volatile char line2[MAXNMEALINELENGTH];
+    // our index into filling the current line
+    volatile uint8_t lineidx;
+    // pointers to the double buffers
+    volatile char *currentline;
+    volatile char *lastline;
+    volatile boolean recvdflag;
+    volatile boolean inStandbyMode;
+
 };
 
 
